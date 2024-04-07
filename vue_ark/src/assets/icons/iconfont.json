@@ -1,0 +1,16 @@
+{
+  "id": "4437417",
+  "name": "ark",
+  "font_family": "element-icons",
+  "css_prefix_text": "el-icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1624379",
+      "name": "ALL",
+      "font_class": "ALL",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    }
+  ]
+}

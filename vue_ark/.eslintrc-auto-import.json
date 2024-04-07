@@ -1,0 +1,12 @@
+{
+  "globals": {
+    "ElMessage": true,
+    "ElMessageBox": true,
+    "defineEmits": "readonly",
+    "defineProps": "readonly",
+    "defineExpose": "readonly",
+    "withDefaults": "readonly",
+    "WeixinJSBridge": "readonly",
+    "ElLoading": "readonly"
+  }
+}

@@ -1,0 +1,448 @@
+<template>
+  <div id="view">
+    <div id="main-doc">
+      <div id="fist" :style="{ background: 'url(' + getImg('ico/' + character.camp + '.webp') + ')',}">
+        <img :src="getImg('chara/' + character.Id + '.webp')" class="img-itme"/>
+        <div>
+          <div class="skill">
+            <div v-for="(itme, i) in character.skill_f" :key="i">
+              <el-popover placement="top-start" trigger="hover">
+                <div class="skill-de">
+                  <div class="skill-name">{{ itme.name+"&nbsp;("+itme.level+")"}}</div>
+                  <div class="skill-text">
+                    <img :src="getImg('skill/' + itme.name + '.webp')" class="skill-text-img">
+                    <div>
+                      <div class="skill-pow">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </el-popover>
+            <div class="skill">
+              <div class="skill-name">{{ itme.name }}</div>
+              <div class="skill-de">
+                <img :src="getImg('skill/' + itme.name + '.webp')" class="skill-img" />
+                <div>
+                  <div class="skill-pow">
+                    <div v-if="itme.reply_way == '被动'">
+                      <div>{{ itme.reply_way }}</div>
+                    </div>
+                    <div v-else>
+                      <div>{{ itme.reply_way + "回复 " }}</div>
+                      <div>{{ itme.release_way + "触发" }}</div>
+                    </div>
+                  </div>
+                  <div class="skill-pow">
+                    <div v-if="itme.start_tec != 0">{{ itme.start_tec }}</div>
+                    <div v-if="itme.use_tec != 0">{{ itme.use_tec }}</div>
+                    <div v-if="itme.time != 0">{{ itme.time + "s" }}</div>
+                  </div>
+                  <div class="skill-text">
+                    {{ itme.de }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          
+        </div>
+      </div>
+      <section class="main-section" id="基础信息">
+        <p class="main-section-header"><b>基础信息</b></p>
+        <p class="text">
+          {{ "代号：" + character.Id }}<br />
+          {{ "性别：" + character.sex }}<br />
+          {{ "战斗经验：" + character.exp }}<br />
+          {{ "出身地：" + character.orgin }}<br />
+          {{ "生日：" + character.birth }}<br />
+          {{ "种族：" + character.race }}<br />
+          {{ "身高：" + character.height }}<br />
+        </p>
+        <li class="text">
+          矿石病感染情况：<br />
+          <div v-if="character.sto">
+            体表有原石结晶分布，参照医学检测报告，确认为感染者。
+          </div>
+          <div v-else>参照医学检测报告，确认为非感染者。</div>
+          <br /><br />
+        </li>
+        <li class="text">
+          临床诊断分析：<br />
+          <div v-if="character.sto">
+            造影检测结果显示，该干员体内脏器轮廓模糊，可见异常阴影，循环系统内源石颗粒检测异常，有矿石病感染迹象，现阶段可确认为是矿石病感染者。
+          </div>
+          <div v-else>
+            造影检测结果显示，该干员体内脏器轮廓清晰，未见异常阴影，循环系统内源石颗粒检测未见异常，无矿石病感染迹象，现阶段可确认为非矿石病感染者。
+          </div>
+          <br /><br />
+        </li>
+        <li class="text">
+          体细胞与源石融合率： {{ character.sto_act }}<br />
+          {{ character.sto_act_de }}<br /><br />
+        </li>
+        <br />
+        <li class="text">
+          血液源石结晶密度： {{ character.sto_mi }}<br />
+          {{ character.sto_mi_de }}
+        </li>
+        <br />
+      </section>
+      <section class="main-section" id="作战信息">
+        <p class="main-section-header"><b>作战信息</b></p>
+        <p class="text">
+          {{ "职业：" + character.profession }}<br />
+          {{ "二级职业：" + character.profession_2 }}<br />
+          {{ "星级：" + character.stars + "星" }}<br />
+          {{ "阵营：" + character.camp }}<br />
+          {{ "特性：" + character.profession_de.de }}<br />
+          {{ "标签：" + character.tag.tag_list }}<br />
+        </p>
+        <p class="text">综合体检测试：</p>
+        <code class="code">
+          {{ "物理强度：" + test_list[character.test.phy] }}<br />
+          {{ "战场机动：" + test_list[character.test.speed] }}<br />
+          {{ "生理耐受：" + test_list[character.test.blood] }}<br />
+          {{ "战术规划：" + test_list[character.test.pla] }}<br />
+          {{ "战斗技巧：" + test_list[character.test.ski] }}<br />
+          {{ "源石技艺适应性：" + test_list[character.test.stone]}}<br /> 
+        </code><br />
+      </section>
+      <section class="main-section" id="技能信息">
+        <p class="main-section-header"><b>技能信息</b></p>
+        <p class="text"><b>天赋：</b><br /></p>
+        <div v-for="(itme, i) in character.skill_t" :key="i">
+          <p class="text">
+            {{ itme.name }}<br />
+            <code v-if="itme.de_zero!=''">
+                {{'初始携带：'+ itme.de_zero }}<br />
+            </code>
+            <code v-if="itme.de_one!=''">
+                {{'精一获得：'+ itme.de_one }}<br />
+            </code>
+            <code v-if="itme.de_two!=''">
+                {{'精二获得：'+ itme.de_two }}<br />
+            </code>
+            <code v-if="itme.notes!=''">
+                {{ itme.notes }}<br />
+            </code>
+          </p>
+        </div>
+        <p class="text"><b>技能：</b></p>
+        <div v-for="(itme, i) in character.skill_f" :key="i">
+          <p class="text">
+            {{ itme.name }}<br />
+            <code>
+              <div v-if="itme.reply_way == '被动'">
+                {{ itme.reply_way }}<br />
+              </div>
+              <div v-else>
+                {{ itme.reply_way + "回复 " + itme.release_way + "触发" }}<br />
+              </div>
+              <div v-if="itme.use_tec != 0">
+                {{ "消耗技力" + itme.use_tec }}<br />
+              </div>
+              <div v-if="itme.time != 0">
+                {{ "初始技力" + itme.start_tec + " 持续时间" + itme.time + "s"
+                }}<br />
+              </div>
+              {{ itme.de }}
+            </code>
+          </p>
+        </div>
+        <p class="text"><b> 基建技能：</b></p>
+        <div v-for="(itme, i) in character.skill_b" :key="i">
+          <p class="text">
+            {{ itme.name }}<br />
+            <code>
+              {{ itme.de }}
+            </code>
+          </p>
+        </div>
+      </section>
+      <section class="main-section" id="背景信息">
+        <p class="main-section-header"><b>背景信息</b></p>
+        <p class="text"><b>客观履历：</b></p>
+        <p class="text">
+          {{ character.obj }}
+        </p>
+        <p class="text"><b>档案资料一</b></p>
+        <code class="text">
+          <div v-for="(itme, i) in character.dang1.split('\n')" :key="i">
+            {{ itme }}<br />
+          </div>
+        </code>
+        <p class="text"><b>档案资料二</b></p>
+        <code class="text">
+          <div v-for="(itme, i) in character.dang2.split('\n')" :key="i">
+            {{ itme }}<br />
+          </div>
+        </code>
+        <p class="text"><b>档案资料三</b></p>
+        <code class="text">
+          <div v-for="(itme, i) in character.dang3.split('\n')" :key="i">
+            {{ itme }}<br />
+          </div>
+        </code>
+        <p class="text"><b>档案资料四</b></p>
+        <code class="text">
+          <div v-for="(itme, i) in character.dang4.split('\n')" :key="i">
+            {{ itme }}<br />
+          </div> </code
+        ><br />
+        <p class="text"><b>晋级记录</b></p>
+        <code class="text">
+          <div v-for="(itme, i) in character.up.split('\n')" :key="i">
+            {{ itme }}<br />
+          </div> </code
+        ><br />
+      </section>
+      <section class="main-section" id="模组信息">
+        <p class="main-section-header"><b>模组信息</b></p>
+        <div v-for="(itme, i) in character.modesec">
+          <p class="text">
+            <b>{{ itme.code }}</b
+            ><br />
+          </p>
+          <p class="text">
+            <b>模组名称：</b><br />
+            {{ itme.name }}
+          </p>
+          <div v-if="itme.code == 'ORIGINAL'">
+            <p class="text"><b>模组效果</b></p>
+            <div class="text">
+            {{ getmode(i) }}
+            </div>
+            <br />
+            <code class="text">
+              <div v-for="(itme, i) in itme.story.split('\n')" :key="i">
+                {{ itme }}<br />
+              </div>
+            </code>
+          </div>
+          <div v-else>
+            <p class="text"><b>模组效果</b></p>
+            <li class="text">
+              <b>一级</b><br />
+              {{ itme.add1 }}<br />
+              {{ "特性追加：" + getmode(i) }}
+            </li>
+            <li class="text">
+              <b>二级</b><br />
+              {{ itme.add2 }}<br />
+              {{ "天赋【" + itme.talant + "】更新：" + itme.talent2 }}
+            </li>
+            <li class="text">
+              <b>三级</b><br />
+              {{ itme.add3 }}<br />
+              {{ "天赋【" + itme.talant + "】更新：" + itme.talent3 }}
+            </li>
+            <br />
+            <code class="text">
+              <div v-for="(itme, i) in itme.story.split('\n')" :key="i">
+                {{ itme }}<br />
+              </div>
+            </code>
+          </div>
+        </div>
+      </section>
+    </div>
+    <nav id="navbar">
+      <p id="navbar-header">{{ character.Id + "详细信息说明" }}</p>
+      <a class="nav-link" href="#基础信息">基础信息</a>
+      <a class="nav-link" href="#作战信息">作战信息</a>
+      <a class="nav-link" href="#技能信息">技能信息</a>
+      <a class="nav-link" href="#背景信息">背景信息</a>
+      <a class="nav-link" href="#模组信息">模组信息</a>
+    </nav>
+  </div>
+</template>
+<script setup>
+import { ref, getCurrentInstance, watch } from "vue";
+import { reactive, onUpdated, onMounted, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
+import { watchEffect } from "vue";
+let router = useRouter();
+let navActive = ref();
+var id = ref();
+const test_list = ["■■", "缺陷", "普通", "标准", "优良", "卓越"];
+
+watchEffect(() => {
+  navActive.value = router.currentRoute.value;
+  id.value = navActive.value.params.id;
+});
+const { proxy } = getCurrentInstance();
+var character = ref({
+  Id: "",
+  birth: "",
+  camp: "",
+  dang1: "",
+  dang2: "",
+  dang3: "",
+  dang4: "",
+  english: "Skadi",
+  exp: "十三年",
+  height: 0,
+  modesec: [],
+  name: "",
+  note: "",
+  obj: "",
+  orgin: "",
+  profession: "",
+  profession_2: "",
+  profession_de: { profession_1: "", profession_2: "", cio: "", de: "" },
+  race: "",
+  sex: "",
+  skill_b: [],
+  skill_f: [],
+  skill_t: [],
+  spelical: "",
+  stars: 0,
+  sto: 0,
+  sto_act: 0,
+  sto_act_de: "",
+  sto_mi: "",
+  sto_mi_de: "",
+  sto_note: "",
+  tag: { staff: "", open: 0, tag_list: "" },
+  test: { blood: 5, phy: 0, pla: 3, ski: 4, speed: 3, stone: 1, staff: "" },
+  up: "",
+});
+var mode = ref(["","","",""])
+proxy.$request
+  .post(proxy.$urls.m().get_character_one, { staff: id.value })
+  .then((result) => {
+    character.value = result.data;
+    console.log(result)
+  });
+const getmode = (index) => {
+    console.log(index)
+    proxy.$request.post(proxy.$urls.m().get_modeinit_code, {code:character.value.modesec[index].code}).then(result => {
+        mode.value[index] = result.data.de
+    })
+    return mode.value[index]
+};
+const getImg = (img) => {
+  try {
+    return require("../../../public/img/" + img);
+  } catch (e) {
+    return require("../../../public/img/failed.png");
+  }
+};
+</script>
+<style>
+#navbar {
+  grid-area: header;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  z-index: 99;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.19), 0 0 6px rgba(0, 0, 0, 0.23);
+  align-items: center;
+}
+
+#navbar-header {
+  padding: 20px 0px 20px 0px;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  border-bottom: 3px solid #ccc;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.19), 0 0 6px rgba(0, 0, 0, 0.23);
+}
+
+.img-itme {
+  width: 60%;
+  height: 100%;
+}
+
+.nav-link {
+  padding: 20px 0px 20px 0px;
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  border-top: 3px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.19), 0 0 3px rgba(0, 0, 0, 0.23);
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+#main-doc {
+  overflow: overlay;
+  padding-left: 215px;
+  background-color: rgba(255, 255, 255, 0.949);
+  text-align: start;
+}
+
+#fist {
+  width: 90%;
+  border-radius: 25px;
+  margin: 20px;
+  background-color: rgba(75, 72, 72, 0.784) !important;
+  background-repeat: no-repeat !important;
+  background-size: 20% !important;
+  display: flex;
+  color: #fff;
+}
+
+.skill {
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0.366);
+  border-radius: 10px;
+}
+
+.skill-name {
+  padding-left: 20px;
+  padding-top: 10px;
+}
+.skill-de{
+  width: 500px;
+}
+.skill-img {
+  width: 20%;
+  height: 100%;
+  padding-left: 20px;
+  padding-bottom: 20px;
+}
+.skill-text-img{
+  width: 100px;
+  height: 100%;
+}
+.skill-pow {
+  display: flex;
+  justify-content: space-around;
+  width: 35%;
+  padding-left: 10px;
+  font-size: 80%;
+}
+
+.skill-text {
+  padding: 10px;
+  font-size: 80%;
+}
+
+.main-section {
+  margin: 40px;
+}
+
+.main-section-header {
+  width: 100%;
+  font-size: 20px;
+}
+
+@media (max-width: 700px) {
+  .main-section {
+    margin: 20px;
+  }
+}
+
+.text {
+  font-size: 15px;
+  line-height: 25px;
+}
+</style>
